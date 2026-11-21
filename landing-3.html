@@ -109,8 +109,10 @@
               <button type="button" class="period-btn active" data-period="AM">AM</button>
               <button type="button" class="period-btn" data-period="PM">PM</button>
             </div>
-            <input type="hidden" id="medicine-time" value="08:00 AM">
           </div>
+          <div id="medicine-time-slots" class="medicine-time-slots" aria-live="polite"></div>
+          <button type="button" id="add-medicine-time" class="add-time-btn">+ Add this time</button>
+          <p id="medicine-time-error" class="medicine-time-error" role="alert" hidden>Add at least one time slot.</p>
         </div>
 
         <!-- 4. Dosage -->

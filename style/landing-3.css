@@ -275,6 +275,52 @@ form#medicine-form {
   flex-direction: column;
 }
 
+.medicine-time-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.medicine-time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1.5px solid #a7f3d0;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+  background: #ecfdf5;
+  color: #065f46;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.medicine-time-chip button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.add-time-btn {
+  margin-top: 0.7rem;
+  border: 1.5px solid #3c1c72;
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  background: #fff;
+  color: #2b1454;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-time-btn:hover { background: #f5f3ff; }
+.medicine-time-error { margin: 0.45rem 0 0; color: #b91c1c; font-size: 0.9rem; }
+
 .scrollable-clock-box {
   display: flex;
   align-items: center;

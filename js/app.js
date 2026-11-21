@@ -122,141 +122,160 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   let currentUpcomingMed = null;
+  let currentUpcomingTime = null;
+  let activeMedicines = [];
 
-  // 3. Render Today's Logged Doses
-  function renderTodayDoses() {
-    if (!window.MedicineDB || !window.MedicineDB.getTodayDoses) return;
-
-    window.MedicineDB.getTodayDoses().then(doses => {
-      if (loggedCountBadge) {
-        loggedCountBadge.textContent = `${doses.length} taken`;
-      }
-
-      if (!todayDosesList) return;
-
-      if (doses.length === 0) {
-        todayDosesList.innerHTML = '<p class="empty-state-text">No medicines logged yet today.</p>';
-      } else {
-        todayDosesList.innerHTML = doses.map(dose => `
-          <div class="dose-log-item">
-            <span class="dose-log-name">✓ ${dose.medicine_name}</span>
-            <span class="dose-log-time">${dose.timestamp_label}</span>
-          </div>
-        `).join('');
-      }
-    }).catch(err => console.error('Error fetching today doses:', err));
+  function renderTodayDoses(doses) {
+    if (loggedCountBadge) loggedCountBadge.textContent = `${doses.length} taken`;
+    if (!todayDosesList) return;
+    todayDosesList.innerHTML = doses.length === 0
+      ? '<p class="empty-state-text">No medicines logged yet today.</p>'
+      : doses.map(dose => `
+        <div class="dose-log-item">
+          <span class="dose-log-name">✓ ${dose.medicine_name}</span>
+          <span class="dose-log-time">${dose.timestamp_label}</span>
+        </div>
+      `).join('');
   }
 
-  // 4. Load Medicines from IndexedDB
-  if (window.MedicineDB && window.MedicineDB.getAllMedicines) {
-    window.MedicineDB.getAllMedicines().then(medicines => {
-      const activeMedicines = medicines.filter(medicine => !medicine.archived);
-      if (activeMedicines.length > 0) {
-        // Pick the first/upcoming medicine
-        currentUpcomingMed = activeMedicines[0];
+  function getMedicineTimes(medicine) {
+    const times = Array.isArray(medicine.times) && medicine.times.length
+      ? medicine.times
+      : (medicine.time ? [medicine.time] : []);
+    return [...new Set(times)].sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
+  }
 
-        // 1. Image on the right (fallback to assets/medica.svg if not uploaded)
-        if (upcomingImg) {
-          if (currentUpcomingMed.photo && currentUpcomingMed.photo.trim().length > 0) {
-            upcomingImg.src = currentUpcomingMed.photo;
-          } else {
-            upcomingImg.src = 'assets/medica.svg';
-          }
-        }
+  function timeToMinutes(time) {
+    const match = String(time || '').match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+    if (!match) return Number.MAX_SAFE_INTEGER;
+    let hour = Number(match[1]) % 12;
+    if (match[3].toUpperCase() === 'PM') hour += 12;
+    return hour * 60 + Number(match[2]);
+  }
 
-        // 2. Name on the left in large font
-        if (upcomingName) {
-          upcomingName.textContent = currentUpcomingMed.name;
-        }
+  function isScheduledToday(medicine) {
+    if (medicine.scheduleType === 'daily' || !medicine.scheduleType) return true;
+    const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date().getDay()];
+    return (medicine.days || []).includes(weekday) || (medicine.days || []).includes('Every day');
+  }
 
-        // Dosage and schedule
-        if (upcomingDosage) {
-          upcomingDosage.textContent = currentUpcomingMed.dosage || 'Standard dose';
-        }
+  function findUpcomingSlot(doses) {
+    const candidates = [];
+    activeMedicines.forEach(medicine => {
+      if (!isScheduledToday(medicine)) return;
+      const times = getMedicineTimes(medicine);
+      const medicineLogs = doses.filter(dose => String(dose.medicine_id) === String(medicine.id));
+      const completedTimes = new Set(medicineLogs.filter(dose => dose.scheduled_time).map(dose => dose.scheduled_time));
+      let legacyLogs = medicineLogs.filter(dose => !dose.scheduled_time).length;
 
-        if (upcomingSchedule) {
-          const scheduleStr = currentUpcomingMed.scheduleType === 'daily'
-            ? 'Daily'
-            : (currentUpcomingMed.days && currentUpcomingMed.days.length > 0 ? currentUpcomingMed.days.join(', ') : 'Custom days');
-          upcomingSchedule.textContent = scheduleStr;
+      times.forEach(time => {
+        if (completedTimes.has(time)) return;
+        if (legacyLogs > 0) {
+          legacyLogs -= 1;
+          return;
         }
-
-        if (upcomingTimeBadge) {
-          upcomingTimeBadge.textContent = currentUpcomingMed.time || 'Scheduled';
-        }
-
-        // Additional information with slightly smaller font right below medicine name
-        if (upcomingExtra) {
-          if (currentUpcomingMed.extra && currentUpcomingMed.extra.trim().length > 0) {
-            upcomingExtra.textContent = currentUpcomingMed.extra;
-            upcomingExtra.style.display = 'block';
-          } else {
-            upcomingExtra.textContent = 'No extra instructions specified.';
-            upcomingExtra.style.display = 'block';
-          }
-        }
-
-        // Announce the upcoming medicine as soon as the dashboard loads.
-        if (window.TTS && window.TTS.isEnabled()) {
-          const announcement = `Upcoming medicine: ${currentUpcomingMed.name}. Dosage: ${currentUpcomingMed.dosage || 'as prescribed'}. Scheduled at ${currentUpcomingMed.time || 'scheduled time'}.`;
-          // Let the dashboard render before starting speech.
-          window.setTimeout(() => {
-            window.TTS.speak(announcement);
-          }, 400);
-        }
-
-        // 3. Render All Prescriptions
-        if (allMedicinesList) {
-          allMedicinesList.innerHTML = activeMedicines.map(med => {
-            const imgSrc = (med.photo && med.photo.trim().length > 0) ? med.photo : 'assets/medica.svg';
-            const sched = med.scheduleType === 'daily' ? 'Daily' : (med.days || []).join(', ');
-            return `
-              <div class="prescription-item">
-                <img src="${imgSrc}" alt="${med.name}" class="prescription-thumb">
-                <div class="prescription-info">
-                  <h4>${med.name}</h4>
-                  <p>${med.dosage} &bull; ${med.time} &bull; ${sched}</p>
-                </div>
-                <button type="button" class="archive-medicine-btn" data-archive-medicine="${med.id}" aria-label="Archive ${med.name}">Archive</button>
-              </div>
-            `;
-          }).join('');
-        }
-      } else {
-        // No medicines found
-        if (upcomingName) upcomingName.textContent = medicines.length ? 'No active medicines' : 'No medicines added yet';
-        if (upcomingDosage) {
-          upcomingDosage.textContent = medicines.length
-            ? 'Archived medicines are hidden from your active schedule.'
-            : 'Tap "+ Add Medicine" to create your first schedule';
-        }
-        if (upcomingExtra) upcomingExtra.style.display = 'none';
-        if (upcomingImg) upcomingImg.src = 'assets/medica.svg';
-        if (btnMedicineTaken) btnMedicineTaken.style.display = 'none';
-        if (allMedicinesList) {
-          allMedicinesList.innerHTML = medicines.length
-            ? '<p class="empty-state-text">No active medicines. Add a medicine to create a schedule.</p>'
-            : '<p class="empty-state-text">No medicines registered yet.</p>';
-        }
-      }
-
-      // Initial check for today's logs
-      renderTodayDoses();
-    }).catch(err => {
-      console.error('Error fetching medicines:', err);
+        candidates.push({ medicine, time, minutes: timeToMinutes(time) });
+      });
     });
+    candidates.sort((a, b) => a.minutes - b.minutes);
+    return candidates[0] || null;
   }
 
+  function updateUpcomingMedicine(doses, allMedicines) {
+    const slot = findUpcomingSlot(doses);
+    currentUpcomingMed = slot?.medicine || null;
+    currentUpcomingTime = slot?.time || null;
+
+    if (upcomingName) {
+      upcomingName.textContent = slot
+        ? slot.medicine.name
+        : (activeMedicines.length ? 'No more medicine for today' : (allMedicines.length ? 'No active medicines' : 'No medicines added yet'));
+    }
+    if (upcomingDosage) {
+      upcomingDosage.textContent = slot
+        ? (slot.medicine.dosage || 'Standard dose')
+        : (activeMedicines.length ? '' : (allMedicines.length ? 'Archived medicines are hidden from your active schedule.' : 'Tap "+ Add Medicine" to create your first schedule'));
+    }
+    if (upcomingSchedule) {
+      upcomingSchedule.textContent = slot
+        ? (slot.medicine.scheduleType === 'daily' ? 'Daily' : (slot.medicine.days || []).join(', '))
+        : '--';
+    }
+    if (upcomingTimeBadge) upcomingTimeBadge.textContent = slot ? slot.time : '--';
+    if (upcomingExtra) {
+      upcomingExtra.textContent = slot ? (slot.medicine.extra || 'No extra instructions specified.') : '';
+      upcomingExtra.style.display = slot ? 'block' : 'none';
+    }
+    if (upcomingImg) upcomingImg.src = slot?.medicine.photo?.trim() || 'assets/medica.svg';
+    if (btnMedicineTaken) {
+      btnMedicineTaken.style.display = slot ? '' : 'none';
+      btnMedicineTaken.disabled = false;
+      btnMedicineTaken.textContent = 'Medicine taken';
+      btnMedicineTaken.classList.remove('logged-success');
+    }
+    if (doseStatusText) doseStatusText.textContent = slot ? `Scheduled for ${slot.time}` : (activeMedicines.length ? 'All scheduled times are complete' : '');
+
+    if (window.TTS && window.TTS.isEnabled()) {
+      const scheduleDescription = slot
+        ? (slot.medicine.scheduleType === 'daily' ? 'Daily' : (slot.medicine.days || []).join(', '))
+        : '';
+      const announcement = slot
+        ? `Upcoming medicine: ${slot.medicine.name}. Dosage: ${slot.medicine.dosage || 'as prescribed'}. Scheduled at ${slot.time}. Schedule: ${scheduleDescription}.${slot.medicine.extra ? ` Instructions: ${slot.medicine.extra}.` : ''}`
+        : (activeMedicines.length
+          ? 'No more medicine for today. All scheduled times are complete.'
+          : (allMedicines.length
+            ? 'No active medicines. Archived medicines are hidden from your active schedule.'
+            : 'No medicines added yet.'));
+      window.setTimeout(() => window.TTS.speak(announcement), 400);
+    }
+  }
+
+  function renderAllMedicines(allMedicines) {
+    if (!allMedicinesList) return;
+    allMedicinesList.innerHTML = activeMedicines.length
+      ? activeMedicines.map(med => {
+        const imgSrc = (med.photo && med.photo.trim().length > 0) ? med.photo : 'assets/medica.svg';
+        const sched = med.scheduleType === 'daily' ? 'Daily' : (med.days || []).join(', ');
+        const times = getMedicineTimes(med).join(', ');
+        return `
+          <div class="prescription-item">
+            <img src="${imgSrc}" alt="${med.name}" class="prescription-thumb">
+            <div class="prescription-info">
+              <h4>${med.name}</h4>
+              <p>${med.dosage} &bull; ${times} &bull; ${sched}</p>
+            </div>
+            <button type="button" class="archive-medicine-btn" data-archive-medicine="${med.id}" aria-label="Archive ${med.name}">Archive</button>
+          </div>
+        `;
+      }).join('')
+      : (allMedicines.length
+        ? '<p class="empty-state-text">No active medicines. Add a medicine to create a schedule.</p>'
+        : '<p class="empty-state-text">No medicines registered yet.</p>');
+  }
+
+  // Select the earliest uncompleted time slot scheduled for today.
+  if (window.MedicineDB && window.MedicineDB.getAllMedicines) {
+    window.MedicineDB.getAllMedicines().then(allMedicines => {
+      activeMedicines = allMedicines.filter(medicine => !medicine.archived);
+      renderAllMedicines(allMedicines);
+      return window.MedicineDB.getTodayDoses().then(doses => {
+        renderTodayDoses(doses);
+        updateUpcomingMedicine(doses, allMedicines);
+      });
+    }).catch(err => console.error('Error loading dashboard medicines:', err));
+  }
   // 5. Button in bottom right named "Medicine taken" which logs usage
   if (btnMedicineTaken) {
     btnMedicineTaken.addEventListener('click', () => {
-      if (!currentUpcomingMed) return;
+      if (!currentUpcomingMed || !currentUpcomingTime) return;
 
       btnMedicineTaken.disabled = true;
       btnMedicineTaken.textContent = 'Logging...';
 
       if (window.MedicineDB && window.MedicineDB.logDose) {
-        window.MedicineDB.logDose(currentUpcomingMed)
+        const loggedMedicine = currentUpcomingMed;
+        const loggedTime = currentUpcomingTime;
+        window.MedicineDB.logDose(loggedMedicine, loggedTime)
           .then((loggedEntry) => {
             btnMedicineTaken.textContent = '✓ Taken Today';
             btnMedicineTaken.classList.add('logged-success');
@@ -265,20 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
               doseStatusText.textContent = `Last taken at ${loggedEntry.timestamp_label}`;
             }
 
-            // TTS confirmation read-aloud
-            if (window.TTS && window.TTS.isEnabled()) {
-              window.TTS.speak(`${currentUpcomingMed.name} dose logged at ${loggedEntry.timestamp_label}. Well done!`);
-            }
+            // Recalculate the next scheduled slot after every completed dose.
+            Promise.all([window.MedicineDB.getAllMedicines(), window.MedicineDB.getTodayDoses()])
+              .then(([allMedicines, doses]) => {
+                activeMedicines = allMedicines.filter(medicine => !medicine.archived);
+                renderTodayDoses(doses);
+                updateUpcomingMedicine(doses, allMedicines);
+              })
+              .catch(err => console.error('Could not refresh today schedule:', err));
 
-            // Refresh today's logs
-            renderTodayDoses();
-
-            // Re-enable after 3 seconds if they want to log another dose later
-            setTimeout(() => {
-              btnMedicineTaken.disabled = false;
-              btnMedicineTaken.textContent = 'Log another dose';
-              btnMedicineTaken.classList.remove('logged-success');
-            }, 3500);
           })
           .catch(err => {
             console.error('Failed to log dose:', err);

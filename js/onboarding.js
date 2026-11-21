@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedHour = '08';
     let selectedMinute = '00';
     let selectedPeriod = 'AM';
+    const selectedTimes = [];
     const openedAsModal = new URLSearchParams(window.location.search).get('modal') === '1';
 
     // 1. Photo Upload & Preview
@@ -74,12 +75,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Scrollable Clock Logic
     const hourWheel = document.getElementById('clock-hour-wheel');
     const minuteWheel = document.getElementById('clock-minute-wheel');
-    const timeInput = document.getElementById('medicine-time');
+    const timeSlotsContainer = document.getElementById('medicine-time-slots');
+    const addTimeButton = document.getElementById('add-medicine-time');
+    const timeError = document.getElementById('medicine-time-error');
 
-    function updateTimeValue() {
-      if (timeInput) {
-        timeInput.value = `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
-      }
+    function getSelectedTime() {
+      return `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
+    }
+
+    function renderSelectedTimes() {
+      if (!timeSlotsContainer) return;
+      timeSlotsContainer.innerHTML = selectedTimes.map((time, index) => `
+        <span class="medicine-time-chip">
+          ${time}
+          <button type="button" data-remove-time="${index}" aria-label="Remove ${time}">&times;</button>
+        </span>
+      `).join('');
+      timeSlotsContainer.querySelectorAll('[data-remove-time]').forEach(button => {
+        button.addEventListener('click', () => {
+          selectedTimes.splice(Number(button.dataset.removeTime), 1);
+          renderSelectedTimes();
+        });
+      });
     }
 
     function setupWheel(wheel, onSelect) {
@@ -109,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
             items.forEach(i => i.classList.remove('active'));
             closestItem.classList.add('active');
             onSelect(closestItem.getAttribute('data-val'));
-            updateTimeValue();
           }
         }, 80);
       });
@@ -120,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
           item.classList.add('active');
           item.scrollIntoView({ behavior: 'smooth', block: 'center' });
           onSelect(item.getAttribute('data-val'));
-          updateTimeValue();
         });
       });
     }
@@ -142,8 +157,31 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         selectedPeriod = btn.getAttribute('data-period');
-        updateTimeValue();
       });
+    });
+
+    addTimeButton?.addEventListener('click', () => {
+      const time = getSelectedTime();
+      if (selectedTimes.includes(time)) {
+        if (timeError) {
+          timeError.textContent = 'That time slot has already been added.';
+          timeError.hidden = false;
+        }
+        return;
+      }
+      selectedTimes.push(time);
+      selectedTimes.sort((a, b) => {
+        const toMinutes = value => {
+          const [clock, period] = value.split(' ');
+          let [hour, minute] = clock.split(':').map(Number);
+          if (period === 'AM' && hour === 12) hour = 0;
+          if (period === 'PM' && hour !== 12) hour += 12;
+          return hour * 60 + minute;
+        };
+        return toMinutes(a) - toMinutes(b);
+      });
+      if (timeError) timeError.hidden = true;
+      renderSelectedTimes();
     });
 
     // 4. Form Submission & Save to IndexedDB
@@ -153,18 +191,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const name = document.getElementById('medicine-name')?.value.trim();
       const scheduleType = scheduleTypeInput?.value || 'daily';
       const selectedDays = Array.from(document.querySelectorAll('#days-picker input:checked')).map(cb => cb.value);
-      const time = timeInput?.value || `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
+      const times = [...selectedTimes];
       const dosage = document.getElementById('dosage')?.value.trim();
       const extra = document.getElementById('extra-info')?.value.trim();
 
       if (!name || !dosage) return;
+      if (times.length === 0) {
+        if (timeError) {
+          timeError.textContent = 'Add at least one time slot.';
+          timeError.hidden = false;
+        }
+        addTimeButton?.focus();
+        return;
+      }
 
       const record = {
         name,
         photo: photoBase64,
         scheduleType,
         days: scheduleType === 'pick-days' ? selectedDays : ['Every day'],
-        time,
+        times,
+        time: times[0],
         dosage,
         extra: extra || '',
       };

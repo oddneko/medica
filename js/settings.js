@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <article class="archived-medicine-item">
                   <div class="archived-medicine-info">
                     <h3>${medicine.name}</h3>
-                    <p>${medicine.dosage || 'Dosage not specified'} &bull; ${medicine.time || 'Time not specified'}</p>
+                    <p>${medicine.dosage || 'Dosage not specified'} &bull; ${(Array.isArray(medicine.times) && medicine.times.length ? medicine.times : [medicine.time]).filter(Boolean).join(', ') || 'Time not specified'}</p>
                   </div>
                   <button type="button" class="btn-restore-medicine" data-restore-medicine="${medicine.id}" aria-label="Restore ${medicine.name}">Restore</button>
                 </article>

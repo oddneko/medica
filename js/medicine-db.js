@@ -122,7 +122,7 @@
     }));
   }
 
-  function logDose(medicine) {
+  function logDose(medicine, scheduledTime) {
     return openDB().then((db) => {
       return new Promise((resolve, reject) => {
         const tx = db.transaction(LOGS_STORE, 'readwrite');
@@ -131,6 +131,7 @@
           medicine_id: medicine.id || null,
           medicine_name: medicine.name,
           dosage: medicine.dosage || '',
+          scheduled_time: scheduledTime || medicine.time || '',
           logged_at: new Date().toISOString(),
           timestamp_label: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           date_label: new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })
