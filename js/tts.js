@@ -13,9 +13,12 @@
 // ── Service Worker Registration (PWA) ────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+    navigator.serviceWorker.register('./sw.js')
       .then((reg) => {
         console.log('[SW] Registered, scope:', reg.scope);
+        if (reg.waiting) {
+          reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
       })
       .catch((err) => {
         console.warn('[SW] Registration failed:', err);
