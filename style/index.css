@@ -43,7 +43,7 @@ body.modal-open { overflow: hidden; }
 .medicine-modal-header { display: flex; justify-content: space-between; align-items: center; padding: .85rem 1.1rem; border-bottom: 1px solid #d1fae5; }
 .medicine-modal-header h2 { margin: 0; color: #2b1454; font-size: 1.1rem; }
 .medicine-modal-close { border: 0; background: transparent; color: #3c1c72; font-size: 1.8rem; line-height: 1; cursor: pointer; }
-.medicine-modal-frame { width: 100%; height: min(700px, calc(94dvh - 56px)); border: 0; background: transparent; }
+.medicine-modal-frame { flex: 1 1 auto; min-height: 0; width: 100%; height: min(700px, calc(94dvh - 56px)); border: 0; background: transparent; }
 
 /* Header & Navigation */
 .dashboard-header {
@@ -507,6 +507,19 @@ body.modal-open { overflow: hidden; }
   body {
     padding: 1rem 0.85rem 5.5rem 0.85rem;
   }
+
+  .medicine-modal { padding: 0; }
+  .medicine-modal-panel {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+  .medicine-modal-header {
+    flex: 0 0 auto;
+    padding-top: calc(.85rem + env(safe-area-inset-top));
+  }
+  .medicine-modal-frame { height: auto; }
 
   .dashboard-header {
     padding: 0.25rem 0 1rem 0;

@@ -6,20 +6,28 @@
 
 body {
   margin: 0;
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: "Bricolage Grotesque", sans-serif;
   background-image:
     repeating-linear-gradient(45deg, rgba(5, 150, 105, 0.1) 0 1px, transparent 1px 18px),
     repeating-linear-gradient(-45deg, rgba(5, 150, 105, 0.1) 0 1px, transparent 1px 18px);
   background-color: #f0fdf4;
+}
+
+@media (max-width: 640px) {
+  body {
+    padding-top: calc(1.5rem + env(safe-area-inset-top));
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
 }
 
 button,

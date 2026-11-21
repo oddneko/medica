@@ -1,0 +1,30 @@
+body {
+  animation: pageDissolveIn 500ms ease both;
+}
+
+body.dissolve-out {
+  animation: none;
+  opacity: 0;
+  filter: blur(8px);
+}
+
+@keyframes pageDissolveIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
+
+  body.dissolve-out {
+    transition: none;
+  }
+}
