@@ -3,8 +3,8 @@
  * Works on Chrome for Android, Safari iOS (iOS 7+), Firefox, Edge.
  *
  * Key design decisions for phone compatibility:
- *  - iOS requires speech to be triggered inside a user-gesture event handler.
- *    We warm up the engine on the first user tap/click anywhere on the page.
+ *  - The dashboard attempts to speak automatically on launch. Some browsers
+ *    may still require a user gesture before allowing speech playback.
  *  - Android Chrome may cancel long utterances; we split long strings into
  *    sentence-sized chunks and queue them.
  *  - We expose a simple global `TTS` object so any page can call TTS.speak().
@@ -41,20 +41,19 @@ if ('serviceWorker' in navigator) {
     return text.match(/[^.!?]+[.!?]*/g) || [text];
   }
 
-  // Speak a string — safe to call on page load (iOS will queue it correctly
-  // once the first user gesture has been handled)
+  // Speak a string. Browsers may block calls made before user activation.
   let warmUpDone = false;
 
   function warmUp() {
     if (!supported || warmUpDone) return;
     warmUpDone = true;
-    // Speak an empty utterance to unlock AudioContext on iOS
+    // Attempt an empty utterance to initialize speech on browsers that allow it.
     const silence = new SpeechSynthesisUtterance('');
     silence.volume = 0;
     window.speechSynthesis.speak(silence);
   }
 
-  // Queue first user interaction to warm up iOS
+  // Initialize speech on first interaction as a compatibility fallback.
   function attachWarmUp() {
     const events = ['touchstart', 'click', 'keydown'];
     function handleFirst() {

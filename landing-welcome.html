@@ -29,6 +29,7 @@
     if (localStorage.getItem('onboarding_completed') !== 'true') {
       window.location.replace('landing-1.html');
     } else {
+      localStorage.setItem('medica_launch_welcome_seen', 'true');
       // Replace this screen in history so Back cannot return to it.
       history.replaceState(null, '', 'landing-welcome.html');
       setTimeout(() => {

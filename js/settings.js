@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.MedicineDB.clearAllData().then(() => {
-      ['user_name', 'user_age', 'language', 'tts_enabled', 'onboarding_completed']
+      ['user_name', 'user_age', 'language', 'tts_enabled', 'onboarding_completed', 'medica_launch_welcome_seen']
         .forEach(key => localStorage.removeItem(key));
       sessionStorage.removeItem('medica_skip_launch_welcome');
       window.location.replace('landing-1.html');

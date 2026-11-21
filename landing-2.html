@@ -42,12 +42,14 @@
         <!-- 2.a. Text-To-Speech Prompt (Triggered if age > 60) -->
         <div id="tts-prompt" class="tts-prompt" style="display: none;">
           <p class="tts-question">🔊 Would you like to use Text-to-Speech (voice assistance)?</p>
-          <div class="tts-options">
+          <div class="tts-options" role="radiogroup" aria-label="Text-to-Speech preference">
             <label class="tts-radio-label">
-              <input type="radio" name="tts-option" value="yes"> Yes, enable
+              <input type="radio" name="tts-option" value="yes">
+              <span>Yes, enable</span>
             </label>
             <label class="tts-radio-label">
-              <input type="radio" name="tts-option" value="no"> No, thank you
+              <input type="radio" name="tts-option" value="no">
+              <span>No, thank you</span>
             </label>
           </div>
         </div>

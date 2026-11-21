@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Returning launches show the brief welcome screen. Consume the one-shot
-  // bypass used when onboarding finishes or a medicine is saved in the modal.
+  // Show the launch welcome once, then keep later dashboard visits direct.
   const skipLaunchWelcome = sessionStorage.getItem('medica_skip_launch_welcome') === '1';
-  if (!arrivingFromWelcome && !skipLaunchWelcome) {
+  const hasSeenLaunchWelcome = localStorage.getItem('medica_launch_welcome_seen') === 'true';
+  if (!arrivingFromWelcome && !skipLaunchWelcome && !hasSeenLaunchWelcome) {
     window.location.replace('landing-welcome.html');
     return;
   }
@@ -196,14 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        // TTS: announce upcoming medicine on page load after first user gesture
+        // Announce the upcoming medicine as soon as the dashboard loads.
         if (window.TTS && window.TTS.isEnabled()) {
           const announcement = `Upcoming medicine: ${currentUpcomingMed.name}. Dosage: ${currentUpcomingMed.dosage || 'as prescribed'}. Scheduled at ${currentUpcomingMed.time || 'scheduled time'}.`;
-          // Announce after a short delay to let the page finish rendering
-          document.addEventListener('click', function firstClick() {
+          // Let the dashboard render before starting speech.
+          window.setTimeout(() => {
             window.TTS.speak(announcement);
-            document.removeEventListener('click', firstClick);
-          }, { once: true });
+          }, 400);
         }
 
         // 3. Render All Prescriptions
