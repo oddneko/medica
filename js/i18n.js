@@ -128,7 +128,10 @@
     const prefix = trimmed.match(/^[^\p{L}\p{N}]*/u)?.[0] || '';
     const phrase = trimmed.slice(prefix.length).trimStart();
     const translated = translations[language]?.[trimmed] || translations[language]?.[phrase];
-    if (!translated) return;
+    if (!translated) {
+      if (language === 'en' && node.nodeValue !== source) node.nodeValue = source;
+      return;
+    }
     const leading = source.match(/^\s*/)?.[0] || '';
     const trailing = source.match(/\s*$/)?.[0] || '';
     const translatedText = translations[language]?.[trimmed] ? translated : `${prefix}${translated}`;
