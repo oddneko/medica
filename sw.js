@@ -9,7 +9,7 @@
  * Compatible with: Chrome for Android, Safari iOS 11.3+, Firefox, Edge.
  */
 
-const CACHE_NAME = 'medica-v7';
+const CACHE_NAME = 'medica-v8';
 const OFFLINE_FALLBACK = './index.html';
 
 // Complete manifest of all assets that make up the app shell and runtime

@@ -25,7 +25,10 @@
         <span class="brand-name">MEDICA</span>
       </div>
       <nav class="dashboard-nav">
-        <a href="landing-3.html" class="nav-link-btn" data-open-medicine-modal>+ Add Medicine</a>
+        <a href="landing-3.html" class="nav-link-btn" data-open-medicine-modal>
+          <span class="nav-btn-icon" aria-hidden="true" data-no-translate>+</span>
+          <span class="nav-btn-text">Add Medicine</span>
+        </a>
         <a href="settings.html" class="nav-link-subtle">Settings</a>
       </nav>
     </header>
@@ -112,6 +115,12 @@
       <p>&copy; 2026 MEDICA &bull; Local and offline first medicine tracker</p>
     </footer>
   </div>
+
+  <!-- Mobile Floating Action Button -->
+  <a href="landing-3.html" class="mobile-fab-btn" data-open-medicine-modal aria-label="Add Medicine">
+    <span class="fab-icon" aria-hidden="true" data-no-translate>+</span>
+    <span class="fab-text">Add Medicine</span>
+  </a>
 
   <div class="medicine-modal" id="medicine-modal" hidden>
     <div class="medicine-modal-backdrop" data-close-medicine-modal></div>
