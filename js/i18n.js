@@ -2,6 +2,8 @@
 (function () {
   const translations = {
     es: {
+      'Please': 'Por favor,', 'provide the following': 'proporciona la siguiente', 'information to continue.': 'información para continuar.',
+      'enter your': 'introduce la', 'medicine information to continue.': 'información del medicamento para continuar.',
       'Welcome to': 'Bienvenido a', 'Local and offline first medicine tracker': 'Control de medicamentos local y sin conexión',
       'Get Started': 'Comenzar', 'Please put the following': 'Por favor, introduce la siguiente', 'information to continue': 'información para continuar',
       'Name:': 'Nombre:', 'User Age:': 'Edad:', 'Language:': 'Idioma:', 'Preferred Language:': 'Idioma preferido:',
@@ -34,6 +36,8 @@
       'No medicines added yet': 'Aún no hay medicamentos añadidos', 'Tap "+ Add Medicine" to create your first schedule': 'Pulsa «+ Añadir medicamento» para crear tu primer horario.'
     },
     fr: {
+      'Please': 'Veuillez', 'provide the following': 'fournir les informations', 'information to continue.': 'suivantes pour continuer.',
+      'enter your': 'saisir les', 'medicine information to continue.': 'informations sur le médicament pour continuer.',
       'Welcome to': 'Bienvenue chez', 'Local and offline first medicine tracker': 'Suivi des médicaments local et hors ligne',
       'Get Started': 'Commencer', 'Please put the following': 'Veuillez saisir les', 'information to continue': 'informations pour continuer',
       'Name:': 'Nom :', 'User Age:': 'Âge :', 'Language:': 'Langue :', 'Preferred Language:': 'Langue préférée :',
@@ -62,6 +66,8 @@
       'This permanently removes your profile, preferences, medicines, archived medicines, and dose history from this device.': 'Cela supprimera définitivement votre profil, vos préférences, vos médicaments et votre historique de doses de cet appareil.'
     },
     de: {
+      'Please': 'Bitte', 'provide the following': 'gib die folgenden', 'information to continue.': 'Informationen ein, um fortzufahren.',
+      'enter your': 'gib deine', 'medicine information to continue.': 'Medikamenteninformationen ein, um fortzufahren.',
       'Welcome to': 'Willkommen bei', 'Local and offline first medicine tracker': 'Lokale, offlinefähige Medikamentenübersicht',
       'Get Started': 'Los geht’s', 'Please put the following': 'Bitte gib die folgenden', 'information to continue': 'Informationen ein, um fortzufahren',
       'Name:': 'Name:', 'User Age:': 'Alter:', 'Language:': 'Sprache:', 'Preferred Language:': 'Bevorzugte Sprache:',
@@ -91,6 +97,8 @@
       'This permanently removes your profile, preferences, medicines, archived medicines, and dose history from this device.': 'Dadurch werden Profil, Einstellungen, Medikamente und Einnahmeverlauf dauerhaft von diesem Gerät gelöscht.'
     },
     hi: {
+      'Please': 'कृपया', 'provide the following': 'निम्न जानकारी दें', 'information to continue.': 'आगे बढ़ने के लिए।',
+      'enter your': 'अपनी', 'medicine information to continue.': 'दवा की जानकारी आगे बढ़ने के लिए दर्ज करें।',
       'Welcome to': 'स्वागत है', 'Local and offline first medicine tracker': 'ऑफ़लाइन दवा ट्रैकर', 'Get Started': 'शुरू करें',
       'Please put the following': 'कृपया आगे बढ़ने के लिए', 'information to continue': 'यह जानकारी भरें', 'Name:': 'नाम:', 'User Age:': 'उम्र:',
       'Language:': 'भाषा:', 'Preferred Language:': 'पसंदीदा भाषा:', 'Would you like to use Text-to-Speech (voice assistance)?': 'क्या आप बोलकर सहायता चाहते हैं?',

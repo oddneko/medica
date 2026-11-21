@@ -28,9 +28,10 @@ body {
   overflow: hidden;
   font-family: "Bricolage Grotesque", sans-serif;
   color: #1e293b;
-  background: linear-gradient(-45deg, #ffffff, #ecfdf5, #d1fae5, #a7f3d0, #ffffff, #6ee7b7, #f0fdf4);
-  background-size: 400% 400%;
-  animation: liveGradientFlow 14s ease infinite;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(5, 150, 105, 0.1) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(5, 150, 105, 0.1) 0 1px, transparent 1px 18px);
+  background-color: #f0fdf4;
   transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
 }
 
@@ -39,23 +40,6 @@ body.dissolve-out {
   filter: blur(8px);
 }
 
-@keyframes liveGradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none;
-  }
-}
 
 main {
   display: flex;
@@ -66,21 +50,22 @@ main {
   max-width: 480px;
 }
 
-/* Heading matching landing-2 width and styling */
+/* Keep the two-line heading independent of the form width and left-aligned. */
 header,
 main header {
-  width: 100%;
-  max-width: 480px;
+  width: fit-content;
+  max-width: none;
+  align-self: flex-start;
   margin-bottom: 1.15rem;
   box-sizing: border-box;
 }
 
 header h1,
 main header h1 {
-  width: 100%;
-  max-width: 100%;
+  width: auto;
+  max-width: none;
   box-sizing: border-box;
-  margin: 0 auto;
+  margin: 0;
   font-size: clamp(1.45rem, 4.8vw, 2.05rem);
   font-weight: 800;
   color: #2b1454;
@@ -91,9 +76,9 @@ main header h1 {
 
 .heading-line {
   display: block;
-  width: 100%;
-  text-align: justify;
-  text-align-last: justify;
+  width: auto;
+  text-align: left;
+  text-align-last: left;
 }
 
 /* Setup card without background box */
