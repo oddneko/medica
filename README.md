@@ -36,6 +36,12 @@ Then open [http://localhost:8000](http://localhost:8000). The app starts at `ind
 
 All tracking data stays in the browser on the current device unless you export it. Use **Export Backup as JSON** in Settings for a backup of the profile, medicines (including archived medicines), and dose history. **Export Logs as CSV** exports dose history for use in a spreadsheet. Keep exported files somewhere safe; deleting browser data or using **Delete All Data** removes the local copy.
 
+## Future plans
+
+- More language support
+- Cloud backup database 
+- Optional AI integrations
+
 ## Project files
 
 - `index.html` — medicine dashboard
