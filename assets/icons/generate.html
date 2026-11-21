@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Icon Generator</title>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+// Generates PWA icons from an SVG and saves them as data URLs
+// Open this file in a browser to generate icons, then save manually
+// OR: we embed them as SVG-based icons that work for PWA
+
+const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" rx="216" fill="#2b1454"/>
+  <path d="M247.869 475.773 L484.06 239.581 C584.754 138.887 748.012 138.887 848.706 239.581 C949.4 340.276 949.4 503.533 848.706 604.227 L612.515 840.419 C511.821 941.113 348.563 941.113 247.869 840.419 C147.175 739.724 147.175 576.467 247.869 475.773 Z" fill="none" stroke="#ffffff" stroke-width="50" stroke-miterlimit="10"/>
+  <line x1="382.539" y1="357.677" x2="745.678" y2="687.667" stroke="#ffffff" stroke-width="50"/>
+  <path d="M709.452 469.243 C701.951 461.742 712.089 439.442 732.096 419.435 C752.103 399.428 774.403 389.29 781.904 396.791 C789.405 404.292 779.267 426.592 759.26 446.599 C739.253 466.606 716.953 476.744 709.452 469.243 Z" fill="none" stroke="#ffffff" stroke-width="50"/>
+  <path d="M598.703 375.821 C591.201 368.32 601.339 346.02 621.346 326.013 C641.354 306.006 663.653 295.868 671.154 303.369 C678.656 310.871 668.517 333.17 648.51 353.177 C628.503 373.184 606.204 383.322 598.703 375.821 Z" fill="none" stroke="#ffffff" stroke-width="50"/>
+</svg>`;
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const img = new Image();
+const svgBlob = new Blob([svgContent], {type: 'image/svg+xml'});
+const url = URL.createObjectURL(svgBlob);
+img.onload = function() {
+  sizes.forEach(size => {
+    canvas.width = size;
+    canvas.height = size;
+    ctx.clearRect(0,0,size,size);
+    ctx.drawImage(img, 0, 0, size, size);
+    console.log(`icon-${size}: `, canvas.toDataURL('image/png').slice(0,50) + '...');
+  });
+  URL.revokeObjectURL(url);
+};
+img.src = url;
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup - Medicine Details</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2b1454">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MEDICA">
+  <link rel="apple-touch-icon" href="assets/icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+  <link rel="stylesheet" href="style/landing-3.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>
+        <span class="heading-line">Please put your medicine</span>
+        <span class="heading-line">information to continue</span>
+      </h1>
+    </header>
+
+    <section class="setup-card">
+      <form id="medicine-form">
+        <!-- 1. Medicine Name & Photo Upload -->
+        <div class="row-name-photo">
+          <div class="photo-upload-container">
+            <input type="file" id="medicine-photo" accept="image/*" style="display: none;">
+            <div class="photo-preview-box" id="photo-upload-btn" role="button" tabindex="0" title="Upload Medicine Photo">
+              <span class="upload-icon" id="photo-placeholder-icon">📷</span>
+              <img id="photo-preview-img" src="" alt="Medicine Photo" style="display: none;">
+            </div>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label for="medicine-name">Medicine Name:</label>
+            <input type="text" id="medicine-name" placeholder="e.g. Paracetamol" required>
+          </div>
+        </div>
+
+        <!-- 2. Schedule Selection (Daily or Pick Days) -->
+        <div class="form-group">
+          <label>Schedule:</label>
+          <div class="schedule-options">
+            <button type="button" class="schedule-btn active" data-schedule="daily">Daily</button>
+            <button type="button" class="schedule-btn" data-schedule="pick-days">Pick Days</button>
+          </div>
+          <input type="hidden" id="schedule-type" value="daily">
+
+          <div class="days-picker-container" id="days-picker" style="display: none;">
+            <label class="day-chip"><input type="checkbox" value="Mon">Mon</label>
+            <label class="day-chip"><input type="checkbox" value="Tue">Tue</label>
+            <label class="day-chip"><input type="checkbox" value="Wed">Wed</label>
+            <label class="day-chip"><input type="checkbox" value="Thu">Thu</label>
+            <label class="day-chip"><input type="checkbox" value="Fri">Fri</label>
+            <label class="day-chip"><input type="checkbox" value="Sat">Sat</label>
+            <label class="day-chip"><input type="checkbox" value="Sun">Sun</label>
+          </div>
+        </div>
+
+        <!-- 3. Scrollable Clock Time Picker -->
+        <div class="form-group clock-row">
+          <label>Time:</label>
+          <div class="scrollable-clock-box">
+            <!-- Hour Scroll Wheel -->
+            <div class="clock-wheel" id="clock-hour-wheel">
+              <div class="clock-wheel-spacer"></div>
+              <div class="clock-item" data-val="01">01</div>
+              <div class="clock-item" data-val="02">02</div>
+              <div class="clock-item" data-val="03">03</div>
+              <div class="clock-item" data-val="04">04</div>
+              <div class="clock-item" data-val="05">05</div>
+              <div class="clock-item" data-val="06">06</div>
+              <div class="clock-item" data-val="07">07</div>
+              <div class="clock-item active" data-val="08">08</div>
+              <div class="clock-item" data-val="09">09</div>
+              <div class="clock-item" data-val="10">10</div>
+              <div class="clock-item" data-val="11">11</div>
+              <div class="clock-item" data-val="12">12</div>
+              <div class="clock-wheel-spacer"></div>
+            </div>
+
+            <span class="clock-colon">:</span>
+
+            <!-- Minute Scroll Wheel -->
+            <div class="clock-wheel" id="clock-minute-wheel">
+              <div class="clock-wheel-spacer"></div>
+              <div class="clock-item active" data-val="00">00</div>
+              <div class="clock-item" data-val="05">05</div>
+              <div class="clock-item" data-val="10">10</div>
+              <div class="clock-item" data-val="15">15</div>
+              <div class="clock-item" data-val="20">20</div>
+              <div class="clock-item" data-val="25">25</div>
+              <div class="clock-item" data-val="30">30</div>
+              <div class="clock-item" data-val="35">35</div>
+              <div class="clock-item" data-val="40">40</div>
+              <div class="clock-item" data-val="45">45</div>
+              <div class="clock-item" data-val="50">50</div>
+              <div class="clock-item" data-val="55">55</div>
+              <div class="clock-wheel-spacer"></div>
+            </div>
+
+            <!-- AM / PM Selector -->
+            <div class="clock-period-toggle">
+              <button type="button" class="period-btn active" data-period="AM">AM</button>
+              <button type="button" class="period-btn" data-period="PM">PM</button>
+            </div>
+            <input type="hidden" id="medicine-time" value="08:00 AM">
+          </div>
+        </div>
+
+        <!-- 4. Dosage -->
+        <div class="form-group">
+          <label for="dosage">Dosage:</label>
+          <input type="text" id="dosage" placeholder="e.g. 500mg, 1 tablet" required>
+        </div>
+
+        <!-- 5. Additional Information (Optional) -->
+        <div class="form-group">
+          <label for="extra-info">Additional Info (Optional):</label>
+          <input type="text" id="extra-info" placeholder="e.g. Take with warm water after lunch">
+        </div>
+
+        <!-- Save Button -->
+        <button type="submit" id="save-medicine-btn" class="btn-save-medicine">Save & Continue</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/tts.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/medicine-db.js"></script>
+  <script src="js/onboarding.js"></script>
+</body>
+</html>

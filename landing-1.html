@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - First Launch</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2b1454">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MEDICA">
+  <link rel="apple-touch-icon" href="assets/icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+  <link rel="stylesheet" href="style/landing-1.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to</h1>
+    <h1>MEDICA</h1>
+    <h2 class="subheading">Local and offline first medicine tracker</h2>
+    <div style="margin-top: 1.75rem;">
+      <button type="button" id="get-started-btn" class="btn-get-started">Get Started</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>&copy; 2026 MEDICA</h2>
+    </section>
+  </main>
+
+  <script src="js/tts.js"></script>
+  <script src="js/i18n.js"></script>
+  <script>
+    // Guard: if onboarding is already complete, skip back to dashboard
+    // This prevents the user from returning to landing-1 via browser back button
+    if (localStorage.getItem('onboarding_completed') === 'true') {
+      // Replace history entry so back button doesn't loop
+      history.replaceState(null, '', 'index.html');
+      window.location.replace('index.html');
+    }
+
+    document.getElementById('get-started-btn')?.addEventListener('click', () => {
+      document.body.classList.add('dissolve-out');
+      setTimeout(() => {
+        window.location.href = 'landing-2.html';
+      }, 600);
+    });
+  </script>
+</body>
+</html>

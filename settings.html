@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - MEDICA</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2b1454">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MEDICA">
+  <link rel="apple-touch-icon" href="assets/icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+  <link rel="stylesheet" href="style/settings.css">
+</head>
+<body>
+  <div class="settings-container">
+    <!-- Header Navigation -->
+    <header class="settings-header">
+      <div class="brand">
+        <img src="assets/medica.svg" alt="MEDICA Logo" class="brand-logo">
+        <span class="brand-name">MEDICA</span>
+      </div>
+      <nav class="settings-nav">
+        <a href="index.html" class="nav-back-link">&larr; Back to Dashboard</a>
+      </nav>
+    </header>
+
+    <main id="settings-app">
+      <!-- Title Box -->
+      <section class="settings-card title-card">
+        <h1>Settings & Preferences</h1>
+        <p>Update your personal information or export your offline medicine tracking logs.</p>
+      </section>
+
+      <!-- 1. Basic Information Card -->
+      <section class="settings-card form-card">
+        <h2>Basic Information</h2>
+        
+        <form id="profile-form">
+          <div class="form-group">
+            <label for="settings-user-name">User Name:</label>
+            <input type="text" id="settings-user-name" placeholder="e.g. John Doe" required>
+          </div>
+
+          <div class="form-group">
+            <label for="settings-user-age">Age:</label>
+            <input type="number" id="settings-user-age" min="1" max="120" placeholder="e.g. 65" required>
+          </div>
+
+          <div class="form-group">
+            <label for="settings-language">Preferred Language:</label>
+            <select id="settings-language" class="settings-select">
+              <option value="en">English (Default)</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Voice Assistance (Text-to-Speech):</label>
+            <div class="toggle-option-row">
+              <label class="radio-option">
+                <input type="radio" name="settings-tts" value="yes">
+                <span>Enable Text-to-Speech</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="settings-tts" value="no">
+                <span>Disabled</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-action-row">
+            <button type="submit" id="save-profile-btn" class="btn-primary">Save Changes</button>
+            <span id="save-feedback" class="feedback-text" style="display: none;">✓ Changes saved successfully</span>
+          </div>
+        </form>
+      </section>
+
+      <section class="settings-card archived-medicines-card" aria-labelledby="archived-medicines-heading">
+        <div class="archived-section-heading">
+          <h2 id="archived-medicines-heading">Archived Medicines</h2>
+          <span class="archived-count" id="archived-medicine-count">0</span>
+        </div>
+        <div class="archived-medicines-list" id="archived-medicines-list" aria-live="polite">
+          <p class="empty-state-text">Loading archived medicines…</p>
+        </div>
+      </section>
+
+      <!-- 2. Export Logs & Data Management Card -->
+      <section class="settings-card export-card">
+        <h2>Export Medicine Logs</h2>
+        <p class="export-description">
+          Download your complete history of logged medicines and dosages. This is useful for sharing with your doctor, caregiver, or keeping an offline backup.
+        </p>
+
+        <div class="export-stats-row">
+          <div class="stat-box">
+            <span class="stat-number" id="stat-total-doses">0</span>
+            <span class="stat-label">Total Doses Logged</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-number" id="stat-total-medicines">0</span>
+            <span class="stat-label">Active Prescriptions</span>
+          </div>
+        </div>
+
+        <div class="export-buttons-group">
+          <button type="button" id="btn-export-csv" class="btn-export">
+            <span class="btn-icon">📊</span> Export Logs as CSV
+          </button>
+          <button type="button" id="btn-export-json" class="btn-export btn-export-secondary">
+            <span class="btn-icon">📁</span> Export Backup as JSON
+          </button>
+        </div>
+
+        <div id="export-feedback" class="feedback-text" style="display: none;"></div>
+      </section>
+
+      <section class="settings-card danger-zone-card" aria-labelledby="delete-data-heading">
+        <h2 id="delete-data-heading">Delete All Data</h2>
+        <p>This permanently removes your profile, preferences, medicines, archived medicines, and dose history from this device.</p>
+        <button type="button" id="btn-delete-all-data" class="btn-delete-data">Delete All Data</button>
+        <p id="delete-data-feedback" class="delete-data-feedback" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <footer class="settings-footer">
+      <p>&copy; 2026 MEDICA &bull; Offline First Medicine Tracker</p>
+    </footer>
+  </div>
+
+  <script src="js/tts.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/medicine-db.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+/* Styles for landing-1.html */
+:root {
+  --primary-color: #2b1454;
+  --secondary-color: #3c1c72;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(-45deg, #ffffff, #ecfdf5, #d1fae5, #a7f3d0, #ffffff, #6ee7b7, #f0fdf4);
+  background-size: 400% 400%;
+  animation: liveGradientFlow 14s ease infinite;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+@keyframes liveGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+header h1 {
+  margin: 0;
+  text-align: center;
+}
+
+header h1:first-of-type,
+.welcome-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.4em;
+  color: #3c1c72
+}
+
+header h1:last-of-type,
+.brand-text {
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 1000;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.1em;
+  color: #2b1454;
+  letter-spacing: 0.03em;
+}
+
+header h2,
+h2 {
+  margin: 0.75rem 0 0 0;
+  text-align: center;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.4;
+  color: #3c1c72;
+}
+
+.subheading {
+  margin-top: 1.75rem;
+  text-align: center;
+  color: #3c1c72;
+}
+
+.btn-get-started {
+  display: inline-block;
+  padding: 0.85rem 2.4rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2b1454;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(43, 20, 84, 0.25);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-get-started:hover {
+  background-color: #3c1c72;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(43, 20, 84, 0.35);
+}
+
+.btn-get-started:active {
+  transform: translateY(0);
+}
+
+section div {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+body {
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s ease;
+}
+
+body.dissolve-out {
+  opacity: 0;
+  filter: blur(8px);
+}
+
+

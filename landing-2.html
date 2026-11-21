@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup - Profile Information</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2b1454">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MEDICA">
+  <link rel="apple-touch-icon" href="assets/icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+  <link rel="stylesheet" href="style/landing-2.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>
+        <span class="heading-line">Please put the following</span>
+        <span class="heading-line">information to continue</span>
+      </h1>
+    </header>
+
+    <section class="setup-card">
+      <form id="setup-form">
+        <!-- 1. Name Input -->
+        <div class="form-group">
+          <label for="user-name">Name:</label>
+          <input type="text" id="user-name" name="userName" placeholder="e.g. John Doe" required>
+        </div>
+
+        <!-- 2. User Age Input -->
+        <div class="form-group">
+          <label for="user-age">User Age:</label>
+          <input type="number" id="user-age" name="userAge" min="1" max="120" placeholder="e.g. 65" required>
+        </div>
+
+        <!-- 2.a. Text-To-Speech Prompt (Triggered if age > 60) -->
+        <div id="tts-prompt" class="tts-prompt" style="display: none;">
+          <p class="tts-question">🔊 Would you like to use Text-to-Speech (voice assistance)?</p>
+          <div class="tts-options">
+            <label class="tts-radio-label">
+              <input type="radio" name="tts-option" value="yes"> Yes, enable
+            </label>
+            <label class="tts-radio-label">
+              <input type="radio" name="tts-option" value="no"> No, thank you
+            </label>
+          </div>
+        </div>
+
+        <!-- 3. Language selection from overflow menu -->
+        <div class="form-group">
+          <label id="language-label">Language:</label>
+          <div class="overflow-menu-container">
+            <div class="overflow-selected-display" id="overflow-toggle-btn" role="button" tabindex="0" aria-labelledby="language-label" aria-haspopup="true" aria-expanded="false">
+              <span id="current-language-text">English (Default)</span>
+              <span class="overflow-icon" aria-hidden="true">&#8942;</span>
+            </div>
+            <input type="hidden" id="selected-language" name="language" value="en">
+            <div class="overflow-menu-dropdown" id="overflow-menu" style="display: none;">
+              <div class="overflow-item" data-value="en">English (Default)</div>
+              <div class="overflow-item" data-value="es">Español</div>
+              <div class="overflow-item" data-value="fr">Français</div>
+              <div class="overflow-item" data-value="de">Deutsch</div>
+              <div class="overflow-item" data-value="hi">हिन्दी (Hindi)</div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-continue" id="continue-setup-btn">Continue</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/tts.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/onboarding.js"></script>
+  <script>
+    let isNavigating = false;
+
+    const nameInput = document.getElementById('user-name');
+    const ageInput = document.getElementById('user-age');
+    const ttsPrompt = document.getElementById('tts-prompt');
+    const langInput = document.getElementById('selected-language');
+    const langText = document.getElementById('current-language-text');
+    const toggleBtn = document.getElementById('overflow-toggle-btn');
+    const overflowMenu = document.getElementById('overflow-menu');
+
+    function checkAndProceed() {
+      if (isNavigating) return;
+      const name = nameInput ? nameInput.value.trim() : '';
+      const ageVal = ageInput ? ageInput.value.trim() : '';
+      const age = parseInt(ageVal, 10);
+      const lang = langInput ? langInput.value : 'en';
+      const selectedTTS = document.querySelector('input[name="tts-option"]:checked');
+      const ttsRadios = document.querySelectorAll('input[name="tts-option"]');
+
+      // Ask for an explicit voice-assistance choice only when age is over 60.
+      ttsRadios.forEach(radio => { radio.required = age > 60; });
+      if (!form.reportValidity()) return;
+      if (!name || !Number.isInteger(age) || age < 1 || age > 120 || (age > 60 && !selectedTTS)) return;
+
+      isNavigating = true;
+      localStorage.setItem('user_name', name);
+      localStorage.setItem('user_age', age);
+      localStorage.setItem('language', lang);
+      if (age > 60) {
+        localStorage.setItem('tts_enabled', selectedTTS.value);
+      }
+
+      document.body.classList.add('dissolve-out');
+      setTimeout(() => {
+        window.location.href = 'landing-3.html';
+      }, 500);
+    }
+
+    // Age input handling
+    if (ageInput && ttsPrompt) {
+      ageInput.addEventListener('input', () => {
+        const age = parseInt(ageInput.value, 10);
+        if (!isNaN(age) && age > 60) {
+          ttsPrompt.style.display = 'block';
+        } else {
+          ttsPrompt.style.display = 'none';
+        }
+        document.querySelectorAll('input[name="tts-option"]').forEach(radio => {
+          radio.required = !isNaN(age) && age > 60;
+        });
+      });
+    }
+
+    // Language selection from overflow menu (3-dots)
+    if (toggleBtn && overflowMenu) {
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = overflowMenu.style.display === 'block';
+        overflowMenu.style.display = isOpen ? 'none' : 'block';
+        toggleBtn.setAttribute('aria-expanded', !isOpen);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!toggleBtn.contains(e.target) && !overflowMenu.contains(e.target)) {
+          overflowMenu.style.display = 'none';
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      const items = overflowMenu.querySelectorAll('.overflow-item');
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          const language = item.getAttribute('data-value');
+          langInput.value = language;
+          window.MedicaI18n?.setLanguage(language);
+          langText.textContent = item.textContent;
+          overflowMenu.style.display = 'none';
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    // Form submit safeguard
+    const form = document.getElementById('setup-form');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        checkAndProceed();
+      });
+    }
+  </script>
+</body>
+</html>

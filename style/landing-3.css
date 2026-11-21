@@ -1,0 +1,396 @@
+/* Styles for landing-3.html */
+:root {
+  --primary-color: #2b1454;
+  --secondary-color: #3c1c72;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.25rem 1rem;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+  background: linear-gradient(-45deg, #ffffff, #ecfdf5, #d1fae5, #a7f3d0, #ffffff, #6ee7b7, #f0fdf4);
+  background-size: 400% 400%;
+  animation: liveGradientFlow 14s ease infinite;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+}
+
+body.dissolve-out {
+  opacity: 0;
+  filter: blur(8px);
+}
+
+@keyframes liveGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Heading matching landing-2 width and styling */
+header,
+main header {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 1.15rem;
+  box-sizing: border-box;
+}
+
+header h1,
+main header h1 {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  font-size: clamp(1.45rem, 4.8vw, 2.05rem);
+  font-weight: 800;
+  color: #2b1454;
+  line-height: 1.25;
+  display: flex;
+  flex-direction: column;
+}
+
+.heading-line {
+  display: block;
+  width: 100%;
+  text-align: justify;
+  text-align-last: justify;
+}
+
+/* Setup card without background box */
+.setup-card {
+  width: 100%;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+form#medicine-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.85rem;
+}
+
+/* Form groups and input styling matching landing-2 */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2b1454;
+  margin-bottom: 0.35rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+  width: 100%;
+  padding: 0.8rem 1.15rem;
+  font-size: 1.05rem;
+  height: 48px;
+  border-radius: 14px;
+  border: 1.5px solid #d1fae5;
+  background: #ffffff;
+  color: #1e293b;
+  outline: none;
+  box-shadow: 0 4px 14px rgba(43, 20, 84, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #3c1c72;
+  box-shadow: 0 0 0 3.5px rgba(60, 28, 114, 0.15);
+}
+
+/* Name & Photo Upload Row */
+.row-name-photo {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.photo-upload-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-preview-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  border: 1.5px dashed #10b981;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(43, 20, 84, 0.05);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.photo-preview-box:hover {
+  border-color: #2b1454;
+  transform: translateY(-1px);
+}
+
+.photo-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-preview-box .upload-icon {
+  font-size: 1.35rem;
+  color: #2b1454;
+}
+
+/* Schedule Segmented Control */
+.schedule-options {
+  display: flex;
+  background: rgba(209, 250, 229, 0.55);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 4px;
+  border: 1.5px solid #d1fae5;
+}
+
+.schedule-btn {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: #2b1454;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.schedule-btn.active {
+  background: #2b1454;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(43, 20, 84, 0.2);
+}
+
+/* Pick Days Selector */
+.days-picker-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.day-chip {
+  flex: 1;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1.5px solid #d1fae5;
+  background: #ffffff;
+  color: #2b1454;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.day-chip:hover {
+  border-color: #2b1454;
+}
+
+.day-chip input {
+  display: none;
+}
+
+.day-chip:has(input:checked),
+.day-chip.selected {
+  background: #2b1454 !important;
+  color: #ffffff !important;
+  border-color: #2b1454 !important;
+  box-shadow: 0 3px 10px rgba(43, 20, 84, 0.28);
+  font-weight: 700;
+  transform: translateY(-1px);
+}
+
+/* Scrollable Clock */
+.clock-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollable-clock-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  border-radius: 14px;
+  border: 1.5px solid #d1fae5;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(43, 20, 84, 0.05);
+  position: relative;
+  overflow: hidden;
+  padding: 0 1rem;
+}
+
+.clock-wheel {
+  width: 58px;
+  height: 52px;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.clock-wheel::-webkit-scrollbar {
+  display: none;
+}
+
+.clock-wheel-spacer {
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.clock-item {
+  height: 26px;
+  line-height: 26px;
+  scroll-snap-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.clock-item.active {
+  color: #2b1454;
+  transform: scale(1.18);
+}
+
+.clock-colon {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #2b1454;
+  margin: 0 0.5rem;
+  user-select: none;
+}
+
+.clock-period-toggle {
+  display: flex;
+  gap: 4px;
+  margin-left: 0.75rem;
+}
+
+.period-btn {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 1px solid #d1fae5;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.period-btn.active {
+  background: #2b1454;
+  color: #ffffff;
+  border-color: #2b1454;
+}
+
+/* Save / Submit Button */
+.btn-save-medicine {
+  margin-top: 0.4rem;
+  height: 50px;
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: #2b1454;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(43, 20, 84, 0.25);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-save-medicine:hover {
+  background-color: #3c1c72;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(43, 20, 84, 0.35);
+}
+
+.btn-save-medicine:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

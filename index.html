@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicinal Tracker - Dashboard</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2b1454">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MEDICA">
+  <link rel="apple-touch-icon" href="assets/icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+  <link rel="stylesheet" href="style/index.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Header Navigation -->
+    <header class="dashboard-header">
+      <div class="brand">
+        <img src="assets/medica.svg" alt="MEDICA Logo" class="brand-logo">
+        <span class="brand-name">MEDICA</span>
+      </div>
+      <nav class="dashboard-nav">
+        <a href="landing-3.html" class="nav-link-btn" data-open-medicine-modal>+ Add Medicine</a>
+        <a href="settings.html" class="nav-link-subtle">Settings</a>
+        <a href="landing-1.html" class="nav-link-subtle">Restart Setup</a>
+      </nav>
+    </header>
+
+    <main id="app">
+      <!-- 1. Independent Welcome Message Box at the Top -->
+      <section class="dashboard-card welcome-card" id="welcome-box">
+        <div class="welcome-content">
+          <h1 id="welcome-heading">Welcome back!</h1>
+          <p id="welcome-subtext">Here is your medicine schedule for today.</p>
+        </div>
+        <div class="welcome-date-badge" id="today-date-badge">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- 2. Upcoming Medicine Box with full information -->
+      <section class="dashboard-card upcoming-card" id="upcoming-box">
+        <div class="upcoming-header-row">
+          <span class="upcoming-pill-tag">UPCOMING MEDICINE</span>
+          <span class="upcoming-time-indicator" id="upcoming-time-badge">--</span>
+        </div>
+
+        <div class="upcoming-main-body">
+          <!-- Left: Name (large font), Dosage, and Additional Info below -->
+          <div class="upcoming-left-info">
+            <h2 class="medicine-name" id="upcoming-name">No upcoming medicine</h2>
+            
+            <div class="medicine-dosage-line">
+              <span class="dosage-label" id="upcoming-dosage">No doses scheduled</span>
+              <span class="dosage-divider" id="dosage-divider">&bull;</span>
+              <span class="schedule-label" id="upcoming-schedule-type">--</span>
+            </div>
+
+            <p class="medicine-additional-info" id="upcoming-extra"></p>
+          </div>
+
+          <!-- Right: Medicine Image (falls back to medica.svg in assets) -->
+          <div class="upcoming-right-image">
+            <img id="upcoming-img" src="assets/medica.svg" alt="Medicine Photo">
+          </div>
+        </div>
+
+        <!-- Bottom Row with Bottom-Right "Medicine taken" button -->
+        <div class="upcoming-bottom-row">
+          <div class="dose-status-container" id="dose-status-container">
+            <span class="status-pulse-dot" id="status-dot"></span>
+            <span class="dose-status-text" id="dose-status-text">Scheduled for today</span>
+          </div>
+
+          <button type="button" id="btn-medicine-taken" class="btn-medicine-taken">
+            Medicine taken
+          </button>
+        </div>
+      </section>
+
+      <!-- Quick Summary Row: Today's Logs & Prescriptions -->
+      <div class="dashboard-sections-grid">
+        <!-- Today's Logged Doses -->
+        <section class="dashboard-card summary-card">
+          <div class="section-title-row">
+            <h3>Today's Logged Doses</h3>
+            <span class="count-badge" id="logged-count-badge">0 doses</span>
+          </div>
+          <div id="today-doses-list" class="doses-list-container">
+            <p class="empty-state-text" id="empty-doses-msg">No medicines logged yet today.</p>
+          </div>
+        </section>
+
+        <!-- All Prescriptions -->
+        <section class="dashboard-card prescriptions-card">
+          <div class="section-title-row">
+            <h3>Active Medicines</h3>
+            <a href="landing-3.html" class="inline-add-link" data-open-medicine-modal>+ Add New</a>
+          </div>
+          <div id="all-medicines-list" class="prescriptions-list-container">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="dashboard-footer">
+      <p>&copy; 2026 MEDICA &bull; Local and offline first medicine tracker</p>
+    </footer>
+  </div>
+
+  <div class="medicine-modal" id="medicine-modal" hidden>
+    <div class="medicine-modal-backdrop" data-close-medicine-modal></div>
+    <section class="medicine-modal-panel" role="dialog" aria-modal="true" aria-labelledby="medicine-modal-title">
+      <div class="medicine-modal-header">
+        <h2 id="medicine-modal-title">Add Medicine</h2>
+        <button type="button" class="medicine-modal-close" aria-label="Close" data-close-medicine-modal>&times;</button>
+      </div>
+      <iframe class="medicine-modal-frame" id="medicine-modal-frame" title="Add a medicine" src="about:blank"></iframe>
+    </section>
+  </div>
+
+  <script src="js/tts.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/medicine-db.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

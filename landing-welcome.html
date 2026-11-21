@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - MEDICA</title>
+  <meta name="theme-color" content="#2b1454">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+  <link rel="stylesheet" href="style/landing-1.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to</h1>
+    <h1>MEDICA</h1>
+    <h2 class="subheading">Local and offline first medicine tracker</h2>
+  </header>
+
+  <main>
+    <section>
+      <h2>&copy; 2026 MEDICA</h2>
+    </section>
+  </main>
+
+  <script src="js/i18n.js"></script>
+  <script>
+    if (localStorage.getItem('onboarding_completed') !== 'true') {
+      window.location.replace('landing-1.html');
+    } else {
+      // Replace this screen in history so Back cannot return to it.
+      history.replaceState(null, '', 'landing-welcome.html');
+      setTimeout(() => {
+        document.body.classList.add('dissolve-out');
+        setTimeout(() => {
+          window.location.replace('index.html?launch=1');
+        }, 600);
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
