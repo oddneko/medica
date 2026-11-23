@@ -1,5 +1,7 @@
 <h1><img src="assets/medica.svg" alt="MEDICA logo" width="42" height="42" align="center"> MEDICA</h1>
 
+[MEDICA](https://medica-zeta-hazel.vercel.app/)
+
 **An offline-first medicine tracker for keeping schedules, doses, and personal records on your device.**
 
 ## Features
